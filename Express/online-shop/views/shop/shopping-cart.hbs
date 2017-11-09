@@ -1,0 +1,107 @@
+{{# if products }}
+    <div id="mainrow" class="row">
+        <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
+            <ul class="list-group">
+                {{# each products }}
+                    <li id="list_group_{{this.item._id}}" class="list-group-item">
+                        <span id="product_qty" class="badge">{{ this.qty }}</span>
+                        <strong>{{ this.item.title }}</strong>
+                        <span id="product_price" class="label label-success">${{ this.price }}</span>
+                        <div class="btn-group">
+                            <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">Action <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#" onclick="reduce('{{this.item._id}}','{{ this.item.price }}')">Reduce by 1</a></li>
+                                <li><a href="#" onclick="remove('{{this.item._id}}','{{ this.item.price }}')">Remove All</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+    <div id="totalpriceup" class="row">
+        <div  class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
+            <strong>Total: <div id="totalprice">{{ totalPrice }} </div></strong>
+        </div>
+    </div>
+    <div id="line" ><hr> </div>
+    <div id="buttoncheckout" class="row">
+        <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
+            <a href="/checkout" type="button" class="btn btn-success">Checkout</a>
+        </div>
+    </div>
+{{ else }}
+    <div class="row">
+        <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
+            <h2>No Items in Cart</h2>
+        </div>
+    </div>
+{{/if}}
+
+<script type="text/javascript">
+    function reduce(id, price)
+    {
+        $.ajax({url: "/reduce/"+id, method:"get", success: function(result){
+            var totalQty = parseInt($("#list_group_"+id +" >  #product_qty").html());
+            totalQty--;
+            
+
+            var totalQty2= parseInt($("#totalQty").html());
+            totalQty2--;
+            $("#totalQty").html(totalQty2);
+
+
+            var totalPrice = parseInt($("#totalprice").html());
+
+            totalPrice -= price;
+
+            if(totalPrice == 0)
+            {
+                $("#line").remove();
+                $("#buttoncheckout").remove();
+                $("#totalpriceup").html("<div class='row'> <div class='col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3'><h2>No Items in Cart</h2></div></div>");
+            }
+            if(totalQty == 0)
+            {
+                $("#list_group_"+id).remove();
+            }
+    
+            $("#list_group_"+id +" >  #product_qty").html(totalQty);
+            $("#totalprice").html(totalPrice);
+        }});
+    }
+
+    function remove(id,price)
+    {
+        $.ajax({url: "/remove/"+id, method:"get", success: function(result){
+
+            var totalQty = parseInt($("#list_group_"+id +" >  #product_qty").html());
+
+            var totalPrice = parseInt($("#totalprice").html());
+
+            var totalQty2= parseInt($("#totalQty").html());
+
+            totalQty2 -= totalQty;
+
+            totalQty = price * totalQty;
+           
+            totalPrice -= totalQty;
+
+
+            if(totalPrice == 0)
+            {
+                $("#line").remove();
+                $("#buttoncheckout").remove();
+                $("#totalpriceup").html("<div class='row'> <div class='col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3'><h2>No Items in Cart</h2></div></div>");
+            }
+            if(totalQty == 0)
+            {
+                $("#list_group_"+id).remove();
+            }
+  
+            $("#totalQty").html(totalQty2);
+            $("#totalprice").html(totalPrice);
+            $("#list_group_"+id).remove();
+        }});
+    }
+</script>

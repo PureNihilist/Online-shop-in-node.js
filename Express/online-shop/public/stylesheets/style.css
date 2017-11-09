@@ -1,0 +1,50 @@
+body {
+    background-attachment: fixed;
+    background-position: center; 
+    background-repeat: no-repeat;
+}
+/*
+.list-group-item
+{
+    color:black;
+}
+.panel-footer{
+    color:black;
+}
+*/
+.thumbnail img {
+    max-height: 200px;
+}
+/*
+.thumbnail .description {
+    color: white;
+}
+
+.thumbnail {
+    background-color : transparent;
+    color: white;
+}
+
+div.price.pull-left{
+    color: white;
+}
+h3 {
+    color: white;
+}
+
+*/
+.price {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+
+
+/*
+.dropdown-menu>li>a {
+    color: white;
+}
+.dropdown-menu {
+    background-color: #333;
+}
+*/
